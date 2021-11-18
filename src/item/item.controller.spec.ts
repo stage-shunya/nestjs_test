@@ -289,7 +289,18 @@ describe('ItemController', () => {
         expect(error.response.status).toBe(404);
         expect(error.response.error).toBe('Missing item(id: 1).');
       });
-      // DeleteResultのためエラー
+
+      // throwされているか
+      const res = () => controller.deleteItem('1', item);
+      expect(res()).rejects.toThrowError(
+        new HttpException(
+          {
+            status: HttpStatus.NOT_FOUND,
+            error: `Missing item(id: 3.`,
+          },
+          404,
+        ),
+      );
     });
   });
 });

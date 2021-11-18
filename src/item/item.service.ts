@@ -43,8 +43,6 @@ export class ItemService {
     deletePassword: string,
   ): Promise<DeleteResult> {
     const targetItem = await this.find(id);
-    console.log('targetItem');
-    console.log(targetItem);
     if (!targetItem) {
       return Promise.reject(new Error('Missing Item.'));
     }
