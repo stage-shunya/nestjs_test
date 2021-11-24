@@ -6,7 +6,7 @@ import { ItemController } from './item.controller';
 import { ItemService } from './item.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Item])],
+  imports: [TypeOrmModule.forFeature([Item, ItemRepository])],
   controllers: [ItemController],
   providers: [ItemService],
 })

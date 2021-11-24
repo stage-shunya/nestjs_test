@@ -1,54 +1,59 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Item } from 'src/entities/item.entity';
 import { ItemRepository } from 'src/repositories/ItemRepository';
-import { DeleteResult, InsertResult, Repository, UpdateResult } from 'typeorm';
-import { CreateItemDTO } from './item.dto';
+import { CreateItemDTO, UpdateItemDTO } from '../models/item.dto';
 
 @Injectable()
 export class ItemService {
   constructor(
-    @InjectRepository(Item)
-    private readonly itemRepository: Repository<Item>,
+    @InjectRepository(ItemRepository)
+    private readonly itemRepository: ItemRepository,
   ) {}
 
-  // テーブルの全データを取得する関数を定義
+  // テーブルの全データを取得する
   async findAll(): Promise<Item[]> {
-    return await this.itemRepository.find();
+    return await this.itemRepository.findAllItem();
   }
 
-  // テーブルにアイテムを追加する関数を定義
-  async create(item: CreateItemDTO): Promise<InsertResult> {
-    return await this.itemRepository.insert(item);
+  // テーブルにアイテムを追加する
+  async insertItem(item: CreateItemDTO): Promise<Item> {
+    return await this.itemRepository.insertItem(item);
   }
 
-  // idを指定してテーブルから1件のデータを取得する関数を定義
-  async find(id: number): Promise<Item> | null {
-    return await this.itemRepository.findOne({ id: id });
+  // idを指定してテーブルから1件のデータを取得する
+  async findOneItem(id: number): Promise<Item> {
+    return await this.itemRepository.findOneItem(id);
   }
 
-  // idを指定してテーブルのデータを更新する関数を定義
-  async update(id: number, item): Promise<UpdateResult> {
-    return await this.itemRepository.update(id, item);
+  // idを指定してテーブルのデータを更新する
+  async updateItem(id: number, item: UpdateItemDTO): Promise<Item> {
+    return await this.itemRepository.updateItem(id, item);
   }
 
-  //  idを指定してテーブルのデータを削除する関数を定義
-  async delete(id: number): Promise<DeleteResult> {
-    return await this.itemRepository.delete(id);
-  }
-
-  //  パスワード判定してデータを削除する関数を定義
-  async deleteByPassword(
-    id: number,
-    deletePassword: string,
-  ): Promise<DeleteResult> {
-    const targetItem = await this.find(id);
+  //  パスワード判定してデータを削除する
+  async deleteByPassword(id: number, deletePassword: string): Promise<void> {
+    const targetItem = await this.findOneItem(id);
     if (!targetItem) {
-      return Promise.reject(new Error('Missing Item.'));
+      // アイテムが存在しなかったとき
+      throw new HttpException(
+        {
+          status: HttpStatus.NOT_FOUND,
+          error: `Missing item(id: ${id}).`,
+        },
+        404,
+      );
     }
+    // 送信したパスワードが間違っていたとき
     if (targetItem.deletePassword !== deletePassword) {
-      return Promise.reject(new Error('Incorrect password'));
+      throw new HttpException(
+        {
+          status: HttpStatus.UNAUTHORIZED,
+          error: 'Incorrect password',
+        },
+        401,
+      );
     }
-    return await this.itemRepository.delete(id);
+    await this.itemRepository.delete(id);
   }
 }

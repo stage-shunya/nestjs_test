@@ -5,7 +5,11 @@ import { Item } from 'src/entities/item.entity';
 import { DeleteResult, InsertResult, Repository, UpdateResult } from 'typeorm';
 import { ItemController } from './item.controller';
 import { ItemService } from './item.service';
-import { CreateItemDTO, DeleteItemDTO, UpdateItemDTO } from './item.dto';
+import {
+  CreateItemDTO,
+  DeleteItemDTO,
+  UpdateItemDTO,
+} from '../models/item.dto';
 import {
   ArgumentMetadata,
   HttpException,
