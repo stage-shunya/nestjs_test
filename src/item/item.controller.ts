@@ -3,10 +3,8 @@ import {
   Controller,
   Delete,
   Get,
-  HttpException,
   HttpStatus,
   Param,
-  ParseIntPipe,
   Post,
   Put,
   UsePipes,
@@ -101,6 +99,7 @@ export class ItemController {
   }
 
   @Delete(':id/delete')
+  @UsePipes(new ValidationPipe({ transform: true }))
   @ApiOperation({
     operationId: 'deleteItem',
     description: '該当のアイテムを削除する',
@@ -120,11 +119,9 @@ export class ItemController {
     description: 'アイテムが見つからない',
   })
   async deleteItem(
-    @Param('id', ParseIntPipe) id: number,
+    @Param('id') id: number,
     @Body() deleteParameter: DeleteParameter,
   ): Promise<void> {
-    console.log('id');
-    console.log(typeof id);
     return await this.service.deleteByPassword(
       id,
       deleteParameter.deletePassword,
