@@ -22,7 +22,7 @@ export class CreateItemDTO {
   @Type(() => Date)
   @IsDate()
   @ApiProperty({
-    example: '2021-09-09',
+    example: '2021-09-11T00:00:00.000Z',
     description: '制限時間',
   })
   limit: Date;
@@ -47,7 +47,7 @@ export class UpdateItemDTO {
   @Type(() => Date)
   @IsDate()
   @ApiPropertyOptional({
-    example: '2021-09-09',
+    example: '2021-09-11T00:00:00.000Z',
     description: '制限時間',
   })
   limit?: Date;
