@@ -1,4 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import {
   IsDate,
   IsNotEmpty,
@@ -18,6 +19,8 @@ export class CreateItemDTO {
   todo: string;
 
   @IsNotEmpty()
+  @Type(() => Date)
+  @IsDate()
   @ApiProperty({
     example: '2021-09-09',
     description: '制限時間',
@@ -34,12 +37,15 @@ export class CreateItemDTO {
 }
 
 export class UpdateItemDTO {
+  @IsString()
   @ApiPropertyOptional({
     example: '買い物に行く',
     description: 'タスクの名称',
   })
   todo?: string;
 
+  @Type(() => Date)
+  @IsDate()
   @ApiPropertyOptional({
     example: '2021-09-09',
     description: '制限時間',

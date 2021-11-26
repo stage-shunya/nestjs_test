@@ -1,4 +1,10 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import {
+  HttpException,
+  HttpStatus,
+  Injectable,
+  NotFoundException,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Item } from 'src/entities/item.entity';
 import { ItemRepository } from 'src/repositories/ItemRepository';
@@ -34,25 +40,9 @@ export class ItemService {
   //  パスワード判定してデータを削除する
   async deleteByPassword(id: number, deletePassword: string): Promise<void> {
     const targetItem = await this.findOneItem(id);
-    if (!targetItem) {
-      // アイテムが存在しなかったとき
-      throw new HttpException(
-        {
-          status: HttpStatus.NOT_FOUND,
-          error: `Missing item(id: ${id}).`,
-        },
-        404,
-      );
-    }
     // 送信したパスワードが間違っていたとき
     if (targetItem.deletePassword !== deletePassword) {
-      throw new HttpException(
-        {
-          status: HttpStatus.UNAUTHORIZED,
-          error: 'Incorrect password',
-        },
-        401,
-      );
+      throw new UnauthorizedException('Incorrect password');
     }
     await this.itemRepository.delete(id);
   }

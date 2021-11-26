@@ -6,7 +6,7 @@ import {
 } from 'typeorm';
 import { Item } from 'src/entities/item.entity';
 import { CreateItemDTO, UpdateItemDTO } from 'src/models/item.dto';
-import { HttpException, HttpStatus } from '@nestjs/common';
+import { HttpException, HttpStatus, NotFoundException } from '@nestjs/common';
 
 @EntityRepository(Item)
 export class ItemRepository extends Repository<Item> {
@@ -18,13 +18,7 @@ export class ItemRepository extends Repository<Item> {
     let res = await this.findOne({ id: id });
     console.log(res);
     if (!res) {
-      throw new HttpException(
-        {
-          status: HttpStatus.NOT_FOUND,
-          error: `Missing item(id: ${id}).`,
-        },
-        404,
-      );
+      throw new NotFoundException(`item(id: ${id}) not found`);
     }
     return res;
   }
@@ -44,6 +38,8 @@ export class ItemRepository extends Repository<Item> {
     let findedItem = await this.findOneItem(id);
     findedItem.limit = item.limit ? item.limit : findedItem.limit;
     findedItem.todo = item.todo ? item.todo : findedItem.todo;
+    console.log('findedItem');
+    console.log(findedItem);
     try {
       return await this.save(findedItem);
     } catch (error) {

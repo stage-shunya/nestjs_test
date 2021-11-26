@@ -6,8 +6,11 @@ import {
   HttpException,
   HttpStatus,
   Param,
+  ParseIntPipe,
   Post,
   Put,
+  UsePipes,
+  ValidationPipe,
 } from '@nestjs/common';
 import { ApiOperation, ApiResponse } from '@nestjs/swagger';
 import { Item } from 'src/entities/item.entity';
@@ -36,6 +39,7 @@ export class ItemController {
   }
 
   @Get(':id')
+  @UsePipes(new ValidationPipe({ transform: true }))
   @ApiOperation({
     operationId: 'getItem',
     description: '該当のアイテムを1件取得する',
@@ -56,6 +60,7 @@ export class ItemController {
   }
 
   @Post()
+  @UsePipes(new ValidationPipe({ transform: true }))
   @ApiOperation({
     operationId: 'addItem',
     description: 'アイテムを登録する',
@@ -72,6 +77,7 @@ export class ItemController {
   }
 
   @Put(':id/update')
+  @UsePipes(new ValidationPipe({ transform: true }))
   @ApiOperation({
     operationId: 'updateItem',
     description: '該当のアイテムを更新する',
@@ -114,9 +120,11 @@ export class ItemController {
     description: 'アイテムが見つからない',
   })
   async deleteItem(
-    @Param('id') id: number,
+    @Param('id', ParseIntPipe) id: number,
     @Body() deleteParameter: DeleteParameter,
   ): Promise<void> {
+    console.log('id');
+    console.log(typeof id);
     return await this.service.deleteByPassword(
       id,
       deleteParameter.deletePassword,

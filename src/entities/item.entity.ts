@@ -10,7 +10,7 @@ import {
 @Entity()
 export class Item {
   @ApiProperty({
-    example: '1',
+    example: 1,
     description: 'ID',
   })
   @PrimaryGeneratedColumn()
@@ -42,14 +42,14 @@ export class Item {
     description: 'データの作成日時',
   })
   @CreateDateColumn()
-  readonly createdAt?: Date;
+  readonly createdAt: Date;
 
   @ApiProperty({
     example: '2020-09-13T00:00:00.000Z',
     description: 'データの最終更新日時',
   })
   @UpdateDateColumn()
-  readonly updatedAt?: Date;
+  readonly updatedAt: Date;
 
   constructor(todo: string, limit: Date, deletePassword: string) {
     this.todo = todo;
