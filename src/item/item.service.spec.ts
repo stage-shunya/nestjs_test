@@ -1,138 +1,99 @@
+import { UnauthorizedException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { Item } from 'src/entities/item.entity';
+import { ItemRepository } from 'src/repositories/ItemRepository';
 import { DeleteResult, InsertResult, Repository, UpdateResult } from 'typeorm';
 import { CreateItemDTO } from '../models/item.dto';
 import { ItemService } from './item.service';
 
 describe('ItemService', () => {
   let service: ItemService;
-  let repo: Repository<Item>;
+  let repo: ItemRepository;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
         ItemService,
-        {
-          provide: getRepositoryToken(Item),
-          useValue: new Repository<Item>(),
-        },
+        ItemRepository,
+        // {
+        //   provide: getRepositoryToken(Item),
+        //   useValue: new Repo_sitory<Item>(),
+        // },
       ],
     }).compile();
 
     service = module.get<ItemService>(ItemService);
-    repo = module.get<Repository<Item>>(getRepositoryToken(Item));
+    repo = module.get<ItemRepository>(ItemRepository);
   });
 
-  it('should be defined', () => {
-    expect(service).toBeDefined();
-  });
+  const baseItem: Item = {
+    id: 1,
+    todo: '試しのテスト',
+    limit: new Date(2021, 0, 1),
+    deletePassword: '123456',
+    createdAt: new Date(2021, 0, 1),
+    updatedAt: new Date(2021, 0, 1),
+  };
+  console.log(baseItem);
 
   describe('findAll', () => {
     it('findAll テスト', async () => {
-      const testItem: Item = {
-        id: 1,
-        todo: '試しのテスト',
-        limit: new Date(),
-        idDone: false,
-        deletePassword: '123456',
-      };
-      jest.spyOn(repo, 'find').mockResolvedValue([testItem]);
+      jest.spyOn(repo, 'findAllItem').mockResolvedValue([baseItem]);
       let res = await service.findAll();
-      expect(res).toEqual([testItem]);
+      expect(res).toEqual([baseItem]);
     });
 
-    it('create テスト', async () => {
+    it('insertItem テスト', async () => {
       let item: CreateItemDTO = {
         todo: 'test',
-        limit: '2020-09-07',
+        limit: new Date(2021, 0, 1),
         deletePassword: '123456',
       };
-      jest.spyOn(repo, 'insert').mockResolvedValue(new InsertResult());
-      let res = await service.create(item);
-      expect(res).toEqual(new InsertResult());
+      jest.spyOn(repo, 'insertItem').mockResolvedValue(baseItem);
+      let res = await service.insertItem(item);
+      expect(res).toEqual(baseItem);
     });
 
-    it('find テスト', async () => {
-      const testItem: Item = {
-        id: 1,
-        todo: '試しのテスト',
-        limit: new Date(),
-        idDone: false,
-        deletePassword: '123456',
-      };
-      jest.spyOn(repo, 'findOne').mockResolvedValue(testItem);
-      let res = await service.find(1);
-      expect(res).toEqual(testItem);
+    it('findOneItem テスト', async () => {
+      jest.spyOn(repo, 'findOneItem').mockResolvedValue(baseItem);
+      let res = await service.findOneItem(1);
+      expect(res).toEqual(baseItem);
     });
 
-    it('update テスト', async () => {
+    it('updateItem テスト', async () => {
       let item: CreateItemDTO = {
         todo: 'test',
-        limit: '2020-09-07',
+        limit: new Date(2021, 0, 1),
         deletePassword: '123456',
       };
-      jest.spyOn(repo, 'update').mockResolvedValue(new UpdateResult());
-      let res = await service.update(1, item);
-      expect(res).toEqual(new UpdateResult());
-    });
-
-    it('delete テスト', async () => {
-      let item: CreateItemDTO = {
-        todo: 'test',
-        limit: '2020-09-07',
-        deletePassword: '123456',
-      };
-      jest.spyOn(repo, 'delete').mockResolvedValue(new DeleteResult());
-      let res = await service.delete(1);
-      expect(res).toEqual(new DeleteResult());
+      jest.spyOn(repo, 'updateItem').mockResolvedValue(baseItem);
+      let res = await service.updateItem(1, item);
+      expect(res).toEqual(baseItem);
     });
   });
 
   describe('deleteByPassword テスト', () => {
     it('正常終了', async () => {
-      const testItem: Item = {
-        id: 1,
-        todo: '試しのテスト',
-        limit: new Date(),
-        idDone: false,
-        deletePassword: '123456',
-      };
-      jest.spyOn(service, 'find').mockResolvedValue(testItem);
-      jest.spyOn(repo, 'delete').mockResolvedValue(new DeleteResult());
+      jest.spyOn(service, 'findOneItem').mockResolvedValue(baseItem);
+      jest.spyOn(repo, 'delete').mockResolvedValue(undefined);
       let res = await service.deleteByPassword(1, '123456');
-      expect(res).toEqual(new DeleteResult());
-    });
-
-    it('targetItemが見つからない', async () => {
-      const testItem = undefined;
-      jest.spyOn(service, 'find').mockResolvedValue(testItem);
-
-      await service.deleteByPassword(1, '123456').catch((error) => {
-        expect(error).toEqual(new Error('Missing Item.'));
-      });
-
-      // errorがスローされているか
-      const res = () => service.deleteByPassword(1, '123456');
-      expect(res()).rejects.toThrowError(new Error('Missing Item.'));
+      expect(res).toBeUndefined();
     });
 
     it('パスワードが一致しない', async () => {
-      const testItem: Item = {
-        id: 1,
-        todo: '試しのテスト',
-        limit: new Date(),
-        idDone: false,
-        deletePassword: '123456',
-      };
-      jest.spyOn(service, 'find').mockResolvedValue(testItem);
-      await service.deleteByPassword(1, 'abcdef').catch((error) => {
-        expect(error).toEqual(new Error('Incorrect password'));
-      });
-
+      // const testItem: Item = {
+      //   id: 1,
+      //   todo: '試しのテスト',
+      //   limit: new Date(),
+      //   deletePassword: '123456',
+      // };
+      jest.spyOn(service, 'findOneItem').mockResolvedValue(baseItem);
       // errorがスローされているか
       const res = () => service.deleteByPassword(1, 'abcdef');
-      expect(res()).rejects.toThrowError(new Error('Incorrect password'));
+      await expect(res).rejects.toThrowError(
+        new UnauthorizedException('Incorrect password'),
+      );
     });
   });
 });
