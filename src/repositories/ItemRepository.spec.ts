@@ -4,7 +4,6 @@ import { getRepositoryToken } from '@nestjs/typeorm';
 import { Item } from 'src/entities/item.entity';
 import { DeleteParameter } from 'src/models/deleteParameter.dto';
 import { CreateItemDTO, UpdateItemDTO } from 'src/models/item.dto';
-import { jestItem } from 'src/models/jestItem.dto';
 import { createConnection, getConnection } from 'typeorm';
 import { ItemRepository } from './ItemRepository';
 
@@ -31,7 +30,7 @@ describe('ItemRepository', () => {
       port: 5432,
       username: 'postgres',
       password: 'stage0707',
-      database: 'jest_test_db',
+      database: 'test_db',
       entities: [Item],
       synchronize: true,
       dropSchema: true,
