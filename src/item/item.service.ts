@@ -42,6 +42,6 @@ export class ItemService {
     if (targetItem.deletePassword !== deletePassword) {
       throw new UnauthorizedException('Incorrect password');
     }
-    await this.itemRepository.delete(id);
+    await this.itemRepository.deleteItem(id);
   }
 }

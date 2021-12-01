@@ -16,7 +16,7 @@ export class ItemRepository extends Repository<Item> {
 
   async findOneItem(id: number): Promise<Item> {
     let res = await this.findOne({ id: id });
-    console.log(res);
+    // console.log(res);
     if (!res) {
       throw new NotFoundException(`item(id: ${id}) not found`);
     }
@@ -25,8 +25,8 @@ export class ItemRepository extends Repository<Item> {
 
   async insertItem(item: CreateItemDTO): Promise<Item> {
     let items = new Item(item.todo, item.limit, item.deletePassword);
-    console.log('items');
-    console.log(items);
+    // console.log('items');
+    // console.log(items);
     try {
       return await this.save(items);
     } catch (error) {
@@ -38,12 +38,16 @@ export class ItemRepository extends Repository<Item> {
     let findedItem = await this.findOneItem(id);
     findedItem.limit = item.limit ? item.limit : findedItem.limit;
     findedItem.todo = item.todo ? item.todo : findedItem.todo;
-    console.log('findedItem');
-    console.log(findedItem);
+    // console.log('findedItem');
+    // console.log(findedItem);
     try {
       return await this.save(findedItem);
     } catch (error) {
       throw new Error(error);
     }
+  }
+
+  async deleteItem(id: number): Promise<void> {
+    await this.delete(id);
   }
 }
