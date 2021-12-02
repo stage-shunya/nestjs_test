@@ -9,6 +9,16 @@ import { DeleteParameter } from 'src/models/deleteParameter.dto';
 describe('ItemController', () => {
   let controller: ItemController;
   let service: ItemService;
+  //テストデータの作成
+  const baseDate = new Date();
+  const baseItem: Item = {
+    id: 1,
+    todo: '試しのテスト',
+    limit: baseDate,
+    deletePassword: '123456',
+    createdAt: baseDate,
+    updatedAt: baseDate,
+  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -25,15 +35,6 @@ describe('ItemController', () => {
     controller = module.get<ItemController>(ItemController);
     service = module.get<ItemService>(ItemService);
   });
-
-  let baseItem: Item = {
-    id: 1,
-    todo: '試しのテスト',
-    limit: new Date(),
-    deletePassword: '123456',
-    createdAt: new Date(),
-    updatedAt: new Date(),
-  };
 
   describe('ItemController テスト', () => {
     it('getItemList テスト 1件以上取得', async () => {
@@ -56,9 +57,9 @@ describe('ItemController', () => {
 
     it('addItem テスト', async () => {
       jest.spyOn(service, 'insertItem').mockResolvedValue(baseItem);
-      let item: CreateItemDTO = {
+      const item: CreateItemDTO = {
         todo: '試しのテスト',
-        limit: new Date(),
+        limit: baseDate,
         deletePassword: '123456',
       };
       const res = await controller.addItem(item);
@@ -67,9 +68,9 @@ describe('ItemController', () => {
 
     it('updateItem テスト', async () => {
       jest.spyOn(service, 'updateItem').mockResolvedValue(baseItem);
-      let item: UpdateItemDTO = {
+      const item: UpdateItemDTO = {
         todo: '試しのテスト',
-        limit: new Date(),
+        limit: baseDate,
       };
       const res = await controller.updateItem(1, item);
       expect(res).toMatchObject(baseItem);
@@ -77,7 +78,7 @@ describe('ItemController', () => {
 
     it('deleteItem テスト', async () => {
       jest.spyOn(service, 'deleteByPassword').mockResolvedValue();
-      let item: DeleteParameter = {
+      const item: DeleteParameter = {
         deletePassword: '123456',
       };
       const res = await controller.deleteItem(1, item);

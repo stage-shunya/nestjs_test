@@ -10,7 +10,16 @@ import { ItemService } from './item.service';
 describe('ItemService', () => {
   let service: ItemService;
   let mockRepo: ItemRepository;
-  let baseItem: Item;
+  //テストデータの作成
+  const baseDate = new Date();
+  const baseItem = {
+    id: 1,
+    todo: '試しのテスト',
+    limit: baseDate,
+    deletePassword: '123456',
+    createdAt: baseDate,
+    updatedAt: baseDate,
+  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -19,16 +28,6 @@ describe('ItemService', () => {
 
     service = module.get<ItemService>(ItemService);
     mockRepo = module.get<ItemRepository>(ItemRepository);
-
-    //テストデータの作成
-    baseItem = {
-      id: 1,
-      todo: '試しのテスト',
-      limit: new Date(),
-      deletePassword: '123456',
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
   });
 
   describe('ItemService テスト', () => {
@@ -39,9 +38,9 @@ describe('ItemService', () => {
     });
 
     it('insertItem テスト', async () => {
-      let item: CreateItemDTO = {
+      const item: CreateItemDTO = {
         todo: '試しのテスト',
-        limit: new Date(),
+        limit: baseDate,
         deletePassword: '123456',
       };
       jest.spyOn(mockRepo, 'insertItem').mockResolvedValue(baseItem);
@@ -56,9 +55,9 @@ describe('ItemService', () => {
     });
 
     it('updateItem テスト', async () => {
-      let item: UpdateItemDTO = {
+      const item: UpdateItemDTO = {
         todo: '試しのテスト',
-        limit: new Date(),
+        limit: baseDate,
       };
       jest.spyOn(mockRepo, 'updateItem').mockResolvedValue(baseItem);
       const res = await service.updateItem(1, item);

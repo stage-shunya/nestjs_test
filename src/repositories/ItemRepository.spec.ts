@@ -1,6 +1,5 @@
 import { NotFoundException } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
-import { getRepositoryToken } from '@nestjs/typeorm';
 import { Item } from 'src/entities/item.entity';
 import { DeleteParameter } from 'src/models/deleteParameter.dto';
 import { CreateItemDTO, UpdateItemDTO } from 'src/models/item.dto';
@@ -9,46 +8,27 @@ import { ItemRepository } from './ItemRepository';
 
 describe('ItemRepository', () => {
   let repo: ItemRepository;
-  let mockRepo: ItemRepository;
-  let baseItem: Item;
+  //テストデータの作成
+  const baseDate = new Date();
+  const baseItem: Item = {
+    id: 1,
+    todo: 'test',
+    limit: baseDate,
+    deletePassword: '123456',
+    createdAt: baseDate,
+    updatedAt: baseDate,
+  };
   const testConnectionName = 'testConnection';
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [
-        ItemRepository,
-        {
-          provide: getRepositoryToken(ItemRepository),
-          useClass: ItemRepository,
-        },
-      ],
+      providers: [ItemRepository],
     }).compile();
 
-    const connection = await createConnection({
-      type: 'postgres',
-      host: 'localhost',
-      port: 5432,
-      username: 'postgres',
-      password: 'stage0707',
-      database: 'test_db',
-      entities: [Item],
-      synchronize: true,
-      dropSchema: true,
-      logging: false,
-      name: testConnectionName,
-    });
+    const connection = await createConnection(testConnectionName);
     repo = connection.getCustomRepository(ItemRepository);
-    mockRepo = module.get<ItemRepository>(ItemRepository);
 
     //テストデータの挿入
-    baseItem = {
-      id: 1,
-      todo: 'test',
-      limit: new Date(),
-      deletePassword: '123456',
-      createdAt: new Date(),
-      updatedAt: new Date(),
-    };
     await repo.save(baseItem);
   });
 
@@ -60,19 +40,18 @@ describe('ItemRepository', () => {
 
   describe('ItemRepository テスト', () => {
     it('findAllItem テスト', async () => {
-      let testDate: Item = {
+      const testData: Item = {
         id: 2,
         todo: 'test2',
-        limit: new Date(),
+        limit: baseDate,
         deletePassword: '123456',
-        createdAt: new Date(),
-        updatedAt: new Date(),
+        createdAt: baseDate,
+        updatedAt: baseDate,
       };
-      await repo.save(testDate);
+      await repo.save(testData);
 
       const res = await repo.findAllItem();
-      console.log(res);
-      expect(res).toMatchObject([baseItem, testDate]);
+      expect(res).toMatchObject([baseItem, testData]);
     });
 
     it('findOneItem テスト 正常終了', async () => {
@@ -88,17 +67,16 @@ describe('ItemRepository', () => {
     });
 
     it('insertItem テスト', async () => {
-      let limit_date = new Date();
-      let item: CreateItemDTO = {
+      const item: CreateItemDTO = {
         todo: 'jestのテスト',
-        limit: limit_date,
+        limit: baseDate,
         deletePassword: '123456',
       };
       const res = await repo.insertItem(item);
-      let createdItem: Item = {
+      const createdItem: Item = {
         id: res.id,
         todo: 'jestのテスト',
-        limit: limit_date,
+        limit: baseDate,
         deletePassword: '123456',
         createdAt: res.createdAt,
         updatedAt: res.updatedAt,
@@ -107,29 +85,28 @@ describe('ItemRepository', () => {
     });
 
     it('insertItem テスト catch', async () => {
-      let item: CreateItemDTO = {
+      const item: CreateItemDTO = {
         todo: 'jestのテスト',
-        limit: new Date(),
+        limit: baseDate,
         deletePassword: '123456',
       };
-      jest.spyOn(mockRepo, 'save').mockImplementation(() => {
+      jest.spyOn(repo, 'save').mockImplementation(() => {
         throw new Error();
       });
-      const res = mockRepo.insertItem(item);
+      const res = repo.insertItem(item);
       await expect(res).rejects.toThrowError(new Error('Error'));
     });
 
     it('updateItem テスト 正常終了', async () => {
-      let limit_date = new Date();
-      let item: UpdateItemDTO = {
+      const item: UpdateItemDTO = {
         todo: 'testの更新',
-        limit: limit_date,
+        limit: baseDate,
       };
       const res = await repo.updateItem(1, item);
-      let updatedItem: Item = {
+      const updatedItem: Item = {
         id: 1,
         todo: 'testの更新',
-        limit: limit_date,
+        limit: baseDate,
         deletePassword: '123456',
         createdAt: res.createdAt,
         updatedAt: res.updatedAt,
@@ -138,9 +115,9 @@ describe('ItemRepository', () => {
     });
 
     it('updateItem テスト idが存在しない', async () => {
-      let item: UpdateItemDTO = {
+      const item: UpdateItemDTO = {
         todo: 'jestの存在しないテスト',
-        limit: new Date(),
+        limit: baseDate,
       };
       const res = repo.updateItem(100, item);
       await expect(res).rejects.toThrowError(
@@ -149,16 +126,15 @@ describe('ItemRepository', () => {
     });
 
     it('updateItem テスト catch', async () => {
-      jest.spyOn(mockRepo, 'findOneItem').mockResolvedValue(baseItem);
-      jest.spyOn(mockRepo, 'save').mockImplementation(() => {
+      jest.spyOn(repo, 'save').mockImplementation(() => {
         throw new Error();
       });
 
-      let item: UpdateItemDTO = {
+      const item: UpdateItemDTO = {
         todo: 'testの更新',
-        limit: new Date(),
+        limit: baseDate,
       };
-      const res = mockRepo.updateItem(1, item);
+      const res = repo.updateItem(1, item);
       await expect(res).rejects.toThrowError(new Error('Error'));
     });
 
