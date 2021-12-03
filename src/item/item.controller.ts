@@ -7,15 +7,25 @@ import {
   Param,
   Post,
   Put,
+  UseGuards,
   UsePipes,
   ValidationPipe,
 } from '@nestjs/common';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiResponse,
+  ApiTags,
+} from '@nestjs/swagger';
 import { Item } from 'src/entities/item.entity';
+import { TestGuard } from 'src/guards/test.guard';
 import { DeleteParameter } from 'src/models/deleteParameter.dto';
 import { CreateItemDTO, UpdateItemDTO } from '../models/item.dto';
 import { ItemService } from './item.service';
 
+@ApiBearerAuth()
+@UseGuards(TestGuard)
+@ApiTags('item')
 @Controller('item')
 export class ItemController {
   constructor(private readonly service: ItemService) {}
