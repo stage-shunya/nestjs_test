@@ -31,6 +31,7 @@ export class ItemController {
   constructor(private readonly service: ItemService) {}
 
   @Get()
+  @UsePipes(new ValidationPipe({ transform: true }))
   @ApiOperation({
     operationId: 'getItemList',
     description: 'アイテムを全件取得する',
@@ -43,7 +44,9 @@ export class ItemController {
     type: Item,
   })
   async getItemList(): Promise<Item[]> {
-    return await this.service.findAll();
+    const res = await this.service.findAll();
+    console.log(typeof res[0].limit);
+    return res;
   }
 
   @Get(':id')

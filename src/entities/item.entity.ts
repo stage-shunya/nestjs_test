@@ -14,7 +14,7 @@ export class Item {
     description: 'ID',
   })
   @PrimaryGeneratedColumn()
-  readonly id: number;
+  id: number;
 
   @ApiProperty({
     example: '買い物に行く',
@@ -42,14 +42,14 @@ export class Item {
     description: 'データの作成日時',
   })
   @CreateDateColumn()
-  readonly createdAt: Date;
+  createdAt: Date;
 
   @ApiProperty({
     example: '2020-09-13T00:00:00.000Z',
     description: 'データの最終更新日時',
   })
   @UpdateDateColumn()
-  readonly updatedAt: Date;
+  updatedAt: Date;
 
   constructor(todo: string, limit: Date, deletePassword: string) {
     this.todo = todo;
