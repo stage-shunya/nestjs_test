@@ -21,7 +21,6 @@
     "entities": ["src/entities/*.entity.ts"],
     "synchronize": true,
     "dropSchema": true,
-    "logging": false,
-    "keepConnectionAlive": true
+    "logging": false
   }
 ]

@@ -45,7 +45,6 @@ export class ItemController {
   })
   async getItemList(): Promise<Item[]> {
     const res = await this.service.findAll();
-    console.log(typeof res[0].limit);
     return res;
   }
 

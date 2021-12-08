@@ -21,9 +21,9 @@ describe('ItemRepository', () => {
   const testConnectionName = 'testConnection';
 
   beforeEach(async () => {
-    const module: TestingModule = await Test.createTestingModule({
-      providers: [ItemRepository],
-    }).compile();
+    // const module: TestingModule = await Test.createTestingModule({
+    //   providers: [ItemRepository],
+    // }).compile();
 
     const connection = await createConnection(testConnectionName);
     repo = connection.getCustomRepository(ItemRepository);
