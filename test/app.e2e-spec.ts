@@ -9,7 +9,7 @@ import { getConnection, getConnectionOptions, getRepository } from 'typeorm';
 import { ItemRepository } from 'src/repositories/ItemRepository';
 import { DeleteParameter } from 'src/models/deleteParameter.dto';
 
-describe('AppController (e2e)', () => {
+describe('AppModule (e2e)', () => {
   let app: INestApplication;
   let testItem: Item;
 
@@ -66,7 +66,7 @@ describe('AppController (e2e)', () => {
     return res;
   };
 
-  describe('AppModule TEST', () => {
+  describe('AppModule E2Eテスト', () => {
     //Bearer認証 token
     const token = 'Bearer secret';
 
