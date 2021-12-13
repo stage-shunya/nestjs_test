@@ -31,6 +31,7 @@ describe('AppModule (e2e)', () => {
 
     app = moduleFixture.createNestApplication();
     //テストデータを設定
+    //テスト
     if (!testItem) {
       testItem = await getConnection()
         .getCustomRepository(ItemRepository)
