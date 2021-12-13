@@ -73,7 +73,7 @@ describe('ItemService', () => {
 
     it('deleteByPassword テスト パスワードが一致しない', async () => {
       jest.spyOn(service, 'findOneItem').mockResolvedValue(baseItem);
-      // errorがスローされるか
+      // errorがスローされるかどうか
       const res = service.deleteByPassword(1, 'abcdef');
       await expect(res).rejects.toThrowError(
         new UnauthorizedException('Incorrect password'),
