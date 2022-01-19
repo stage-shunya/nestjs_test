@@ -1,0 +1,26 @@
+[
+  {
+    "type": "postgres",
+    "host": "localhost",
+    "port": 5432,
+    "username": "postgres",
+    "password": "stage0707",
+    "database": "test_db",
+    "entities": ["dist/entities/**/*.entity.js"],
+    "migrations": ["dist/migrations/**/*.js"],
+    "logging": false
+  },
+  {
+    "name": "testConnection",
+    "type": "postgres",
+    "host": "localhost",
+    "port": 5432,
+    "username": "postgres",
+    "password": "stage0707",
+    "database": "jest_test_db",
+    "entities": ["src/entities/*.entity.ts"],
+    "synchronize": true,
+    "dropSchema": true,
+    "logging": false
+  }
+]

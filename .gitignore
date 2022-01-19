@@ -11,7 +11,8 @@ yarn-debug.log*
 yarn-error.log*
 lerna-debug.log*
 
-# orm
+# local
+ormconfig.json
 
 # OS
 .DS_Store

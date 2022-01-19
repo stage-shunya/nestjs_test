@@ -14,9 +14,9 @@ describe('ItemService', () => {
   const baseDate = new Date();
   const baseItem = {
     id: 1,
-    todo: '試しのテストです',
+    todo: '試しのテスト',
     limit: baseDate,
-    deletePassword: '1234567',
+    deletePassword: '123456',
     createdAt: baseDate,
     updatedAt: baseDate,
   };
