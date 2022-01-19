@@ -1,0 +1,57 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+package announcement;
+
+message  AddAnnouncementRequest {
+  string id = 1;
+  string title = 2;
+  string announcementTypeId = 3;
+  string startDate = 4;
+  string endDate = 5;
+  string contentText = 6;
+  string bannerUri = 7;
+  bool isPushed = 8;
+  repeated string userGroup = 9;
+}
+
+message AnnouncementData {
+  string id = 1;
+  string title = 2;
+  string publisherId = 3;
+  string announcementTypeId = 4;
+  string startDate = 5;
+  string endDate = 6;
+  string contentText = 7;
+  string bannerUri = 8;
+}
+
+message AnnouncementListData {
+  repeated AnnouncementData announcements = 1;
+  int32 fromResult = 2;
+  int32 toResult = 3;
+  int32 totalCount = 4;
+}
+
+message AnnouncementTypeData {
+  string id = 1;
+  string type = 2;
+}
+
+message Test {
+  string id = 1;
+  string type = 2;
+  string neil = 3;
+}
+
+message AnnouncementTypeListData {
+  repeated AnnouncementTypeData announcementTypes = 1;
+}
+
+service AnnouncementService {
+  rpc FindAllAnnouncements (google.protobuf.Empty) returns (AnnouncementListData) {}
+  rpc FindAnnouncementType (google.protobuf.Empty) returns (AnnouncementTypeListData) {}
+  rpc AddAnnouncement (AddAnnouncementRequest) returns (AnnouncementData) {}
+  rpc TestDo (google.protobuf.Empty) returns (Test) {}
+}
