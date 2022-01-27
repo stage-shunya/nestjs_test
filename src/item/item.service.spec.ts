@@ -30,7 +30,7 @@ describe('ItemService', () => {
     mockRepo = module.get<ItemRepository>(ItemRepository);
   });
 
-  describe('ItemService テスト', () => {
+  describe('ItemService テストの必要性', () => {
     it('findAll テスト', async () => {
       jest.spyOn(mockRepo, 'findAllItem').mockResolvedValue([baseItem]);
       const res = await service.findAll();
