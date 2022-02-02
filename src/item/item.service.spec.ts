@@ -48,7 +48,7 @@ describe('ItemService', () => {
       expect(res).toMatchObject(baseItem);
     });
 
-    it('findOneItem テスト', async () => {
+    it('findOneItem テストです', async () => {
       jest.spyOn(mockRepo, 'findOneItem').mockResolvedValue(baseItem);
       const res = await service.findOneItem(1);
       expect(res).toMatchObject(baseItem);
