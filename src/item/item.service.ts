@@ -40,6 +40,7 @@ export class ItemService {
     const targetItem = await this.findOneItem(id);
     // 送信したパスワードが間違っていたとき
     if (targetItem.deletePassword !== deletePassword) {
+      // throw処理
       throw new UnauthorizedException('Incorrect password');
     }
     await this.itemRepository.deleteItem(id);
