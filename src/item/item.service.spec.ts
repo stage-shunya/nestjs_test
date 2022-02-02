@@ -54,7 +54,7 @@ describe('ItemService', () => {
       expect(res).toMatchObject(baseItem);
     });
 
-    it('updateItem テスト', async () => {
+    it('updateItem テストです', async () => {
       const item: UpdateItemDTO = {
         todo: '試しのテスト',
         limit: baseDate,
