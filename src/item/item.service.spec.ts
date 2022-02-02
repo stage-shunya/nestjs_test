@@ -30,14 +30,14 @@ describe('ItemService', () => {
     mockRepo = module.get<ItemRepository>(ItemRepository);
   });
 
-  describe('ItemService テスト', () => {
+  describe('ItemService テストです', () => {
     it('findAll テスト', async () => {
       jest.spyOn(mockRepo, 'findAllItem').mockResolvedValue([baseItem]);
       const res = await service.findAll();
       expect(res).toMatchObject([baseItem]);
     });
 
-    it('insertItem テスト', async () => {
+    it('insertItem テストです', async () => {
       const item: CreateItemDTO = {
         todo: '試しのテスト',
         limit: baseDate,
