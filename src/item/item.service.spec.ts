@@ -10,7 +10,8 @@ import { ItemService } from './item.service';
 describe('ItemService', () => {
   let service: ItemService;
   let mockRepo: ItemRepository;
-  //テストデータの作成した
+  //テストデータの作成したのではない！
+  // わけわかめ
   const baseDate = new Date();
   const baseItem = {
     id: 1,
